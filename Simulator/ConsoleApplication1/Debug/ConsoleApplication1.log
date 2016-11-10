@@ -1,0 +1,8 @@
+﻿  DormandPrinceSolver.cpp
+c:\users\evenod\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\dormandprincesolver.cpp(129): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\evenod\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\dormandprincesolver.cpp(62): warning C4101: 'LongGps': unreferenced local variable
+c:\users\evenod\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\dormandprincesolver.cpp(62): warning C4101: 'Long': unreferenced local variable
+c:\users\evenod\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\dormandprincesolver.cpp(62): warning C4101: 'LatGps': unreferenced local variable
+c:\users\evenod\documents\visual studio 2015\projects\consoleapplication1\consoleapplication1\dormandprincesolver.cpp(62): warning C4101: 'Lat': unreferenced local variable
+  ConsoleApplication1.vcxproj -> C:\Users\evenod\Documents\Visual Studio 2015\Projects\ConsoleApplication1\Debug\ConsoleApplication1.exe
+  ConsoleApplication1.vcxproj -> C:\Users\evenod\Documents\Visual Studio 2015\Projects\ConsoleApplication1\Debug\ConsoleApplication1.pdb (Full PDB)

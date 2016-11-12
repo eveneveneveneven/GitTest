@@ -3,6 +3,7 @@
 #include <fstream>
 #include "ShipInfo.h"
 #include "Eigen\Dense"
+#include "CurrentModel.h"
 using namespace Eigen;
 
 struct Solver {

@@ -130,7 +130,7 @@ Ship GetVesselData() {
 	FoundShip.Y_vr = Y_vr_cse*ratio;
 	FoundShip.Y_vvv = -0;
 	FoundShip.X_uu = X_uu_cse*ratio;
-	FoundShip.X_uuu = X_uuu_cse*ratio;
+	FoundShip.X_uuu = X_uuu_cse*ratio/3;
 	FoundShip.X_v = 0;
 	FoundShip.X_vv = 0;
 	FoundShip.X_vvv = 0;

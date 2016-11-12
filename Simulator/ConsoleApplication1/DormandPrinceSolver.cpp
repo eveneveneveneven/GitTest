@@ -9,8 +9,8 @@ double speed_control(double u, double SpeedRef) {
 	double Error = SpeedRef - u;
 	double SpeedOut = 0;
 	static double LastSpeedRef = 0;
-	double Ki = 32;
-	double Kp = 96;
+	double Ki = 100;
+	double Kp = 200;
 	static double IntegratedError = 0;
 
 	LastSpeedRef = SpeedRef;
@@ -70,10 +70,18 @@ void Solve(double tf, Ship CyberShipE1) {
 	double thrust_yaw = 0;
 	double thrust_surge = 0;
 	double thrust_sway = 0;
-	double surge_ref = 1.11; //Reference speed, m/s
+
+	double surge_ref = 1.2; //Reference speed, m/s
 	double psi_ref = (M_PI / 180) * 0;
-	CyberShipE1.current_speed = 0.2; //Current speed in m/s
-	CyberShipE1.current_direction = 90; //Current direction in NED, in degrees.
+	double BaseCurrentSpeed = 0.2; //Current speed in m/s
+	double BaseCurrentDir = 90;
+	CyberShipE1.current_speed = BaseCurrentSpeed;
+	CyberShipE1.current_direction = BaseCurrentDir;
+	double V_c = 0; //varying element of current speed
+	double beta_c = 0; //varying element of current angle
+	 //Current direction in NED, in degrees.
+	CyberShipE1.mu_v = 0.5;
+	CyberShipE1.mu_beta = 0.0001;
 	CyberShipE1.nu_c_n << CyberShipE1.current_speed*cos((M_PI / 180)*CyberShipE1.current_direction), CyberShipE1.current_speed*sin((M_PI / 180)*CyberShipE1.current_direction), 0;
 	CyberShipE1.nu_c_b << CyberShipE1.current_speed*cos((M_PI / 180)*CyberShipE1.current_direction - CyberShipE1.eta(2)), CyberShipE1.current_speed*sin((M_PI / 180)*CyberShipE1.current_direction - CyberShipE1.eta(2)), 0;
 	CyberShipE1.nu_r = CyberShipE1.nu - CyberShipE1.nu_c_b;
@@ -82,8 +90,10 @@ void Solve(double tf, Ship CyberShipE1) {
 	std::clock_t begin = clock();
 	while (Ode45.t <= tf) {
 		begin = clock();
-
-
+		V_c = updateCurrentSpeed(Ode45.h_min, V_c, CyberShipE1.mu_v);
+		CyberShipE1.current_speed = 0;// = BaseCurrentSpeed + V_c;
+		beta_c = updateCurrentDir(Ode45.h_min, beta_c, CyberShipE1.mu_beta);
+		CyberShipE1.current_direction = BaseCurrentDir + beta_c;
 		Sleep(48);
 		thrust_surge = speed_control(CyberShipE1.nu(0), surge_ref);
 		thrust_yaw = yaw_control(CyberShipE1.eta(2), psi_ref, CyberShipE1.nu(2)); // -20 * cos(0.15*Ode45.t);
@@ -91,7 +101,7 @@ void Solve(double tf, Ship CyberShipE1) {
 			psi_ref = (M_PI / 180) * 0;
 		}
 		if (Ode45.t > 30) {
-			psi_ref = (M_PI / 180) * 90;
+			//psi_ref = (M_PI / 180) * 90;
 		}
 		if (Ode45.t > 45) {
 			psi_ref = (M_PI / 180) * 180;
@@ -126,14 +136,14 @@ void Solve(double tf, Ship CyberShipE1) {
 		UDPbroadcastString(bcSocket, data);
 		HeadingData=GetHeadingString(CyberShipE1.eta(2)*(180 / M_PI));
 		heading = HeadingData.c_str();
-		UDPbroadcastControlParams(bcSocketHeading, thrust_surge ,thrust_yaw,psi_ref*(180/M_PI),surge_ref*3.6, CyberShipE1.eta(2)*(180 / M_PI));
+		UDPbroadcastControlParams(bcSocketHeading, thrust_surge ,thrust_yaw,psi_ref*(180/M_PI),surge_ref*3.6, CyberShipE1.eta(2)*(180 / M_PI), CyberShipE1.current_speed, CyberShipE1.current_direction);
 		resWrite << CyberShipE1.eta(0) << "   \t" << CyberShipE1.eta(1) << "   \t" << CyberShipE1.eta(2)<< "   \t" << CyberShipE1.nu(0) << "   \t" << CyberShipE1.nu(1) << "   \t" << CyberShipE1.nu(2) << "   \t" << CyberShipE1.tau_control(0) << "   \t" << CyberShipE1.tau_control(1) << "   \t" << CyberShipE1.tau_control(2) << "   \t" << Ode45.t << "\n";
 		CyberShipE1.eta = Calculate_Next_Eta(Ode45, CyberShipE1);
 		CyberShipE1.nu_r = Calculate_Next_Nu(Ode45, CyberShipE1);
 		Ode45.t = Ode45.t + Ode45.h;
 		end = clock();
 		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "\r Elapsed time per cycle: " << elapsed_secs << " seconds";
+		//std::cout << "\r Elapsed time per cycle: " << elapsed_secs << " seconds";
 	}
 	std::cout << "Simulation done" << std::endl; 
 }

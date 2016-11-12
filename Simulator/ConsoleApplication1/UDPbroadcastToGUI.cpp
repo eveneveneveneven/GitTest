@@ -48,9 +48,9 @@ void UDPbroadcastString(broadcastSocket bcSocket, const char *data) {
 }
 
 
-void UDPbroadcastControlParams(broadcastSocket bcSocket, float leftInput, float rightInput, float headingRef, float speedRefKmh, double heading) {
+void UDPbroadcastControlParams(broadcastSocket bcSocket, float leftInput, float rightInput, float headingRef, float speedRefKmh, double heading, double currentSpeed, double currentDir) {
 	stringstream ss;
-	ss << '$' << "LEFT_MOTOR," << leftInput << "$RIGHT_MOTOR," << rightInput << "$HEADING_REF," << headingRef << "$SPEED_REF," << speedRefKmh << "$HEADING," << heading << "$HEADING_REF," << headingRef << "$SPEED_REF," << speedRefKmh;
+	ss << '$' << "LEFT_MOTOR," << leftInput << "$RIGHT_MOTOR," << rightInput << "$HEADING_REF," << headingRef << "$SPEED_REF," << speedRefKmh << "$HEADING," << heading << "$HEADING_REF," << headingRef << "$SPEED_REF," << speedRefKmh << "$CURRENT_SPEED," << currentSpeed << "$CURRENT_DIR," << currentDir;
 
 	string controlParams = ss.str();
 	UDPbroadcastString(bcSocket, controlParams.c_str());

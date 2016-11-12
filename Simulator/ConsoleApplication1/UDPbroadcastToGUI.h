@@ -32,4 +32,4 @@ void UDPbroadcastString(broadcastSocket bcSocket, const char *data);
 // Broadcasts some important controller data for analyzing on shore.
 // GUI on shore will receive a string on the following (example) form:
 // $LEFT_MOTOR,99$RIGHT_MOTOR,-99$HEADING_REF,359$SPEED_REF,5.5
-void UDPbroadcastControlParams(broadcastSocket bcSocket, float leftInput, float rightInput, float headingRef, float speedRefKmh, double heading);
+void UDPbroadcastControlParams(broadcastSocket bcSocket, float leftInput, float rightInput, float headingRef, float speedRefKmh, double heading, double currentSpeed, double currentDir);
